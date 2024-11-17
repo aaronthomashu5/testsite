@@ -208,8 +208,8 @@
         // Function to load questions from the backend
         async function loadQuestions() {
             try {
-                // Fetch questions from the backend
-                const response = await fetch('/api/questions', {
+                const BACKEND_URL = 'https://676a-2405-201-f012-9828-20cc-f2a8-115-235c.ngrok-free.app';
+                const response = await fetch(`${BACKEND_URL}/api/questions`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
