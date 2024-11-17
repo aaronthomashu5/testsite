@@ -208,18 +208,31 @@
         // Function to load questions from the backend
         async function loadQuestions() {
             try {
+                const queryParams = new URLSearchParams(window.location.search);
+                const spec_code = queryParams.get('spec_code');
+                const semester = queryParams.get('semester');
+                const subject = queryParams.get('subject');
+
                 const BACKEND_URL = 'https://676a-2405-201-f012-9828-20cc-f2a8-115-235c.ngrok-free.app';
-                const response = await fetch(`${BACKEND_URL}/api/questions`, {
+                const response = await fetch(`${BACKEND_URL}/api/questions?` + queryParams.toString(), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         initData: tg.initData
+                        spec_code: spec_code,
+                        semester: semester,
+                        subject: subject
                     })
                 });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
 
                 const result = await response.json();
+                console.log('API Response:', result); // Debug logging
+                
                 if (result.status === 'success') {
                     displayModules(result.data);
                     document.getElementById('subject-name').textContent = `Subject name: ${result.data.subject_name}`;
