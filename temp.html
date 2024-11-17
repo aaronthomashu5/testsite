@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Portal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidebar-leaderboard {
+            padding: 20px;
+            color: #818181;
+            display: none;
+        }
+
+        .sidebar-leaderboard.active {
+            display: block;
+        }
+
+        .sidebar .list-group-item {
+            background-color: transparent;
+            border-color: #404040;
+            color: #818181;
+        }
+
+        .module-button {
+            margin: 10px 0;
+            width: 100%;
+        }
+
+        .subtopics {
+            display: none;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .dark-mode .card {
+            background-color: #444;
+            color: #fff;
+        }
+
+        .dark-mode .navbar {
+            background-color: #656565 !important;
+        }
+
+        .dark-mode .navbar .btn-dark {
+            background-color: #222;
+            border-color: #222;
+        }
+
+        .dark-mode .navbar .btn-outline-dark {
+            color: #fff;
+            border-color: #fff;
+        }
+
+        .dark-mode .navbar .btn-outline-dark:hover {
+            background-color: #fff;
+            color: #333;
+        }
+
+        .leaderboard {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        #main-content {
+            transition: margin-left .5s;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div id="mySidebar" class="sidebar">
+        <a href="#" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#"><i class="fas fa-home"></i> Home</a>
+        <a href="#"><i class="fas fa-book"></i> Courses</a>
+        <a href="#"><i class="fas fa-chart-line"></i> Progress</a>
+        <a href="#" onclick="toggleSidebarLeaderboard()"><i class="fas fa-trophy"></i> Leaderboard</a>
+        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+
+        <!-- Sidebar Leaderboard -->
+        <div id="sidebarLeaderboard" class="sidebar-leaderboard">
+            <h5 class="text-light mb-3">Top Referrers</h5>
+            <ol class="list-group list-group-numbered">
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">John Doe</div>
+                    </div>
+                    <span class="badge bg-primary rounded-pill">250</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">Jane Smith</div>
+                    </div>
+                    <span class="badge bg-primary rounded-pill">200</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">Mike Johnson</div>
+                    </div>
+                    <span class="badge bg-primary rounded-pill">150</span>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        <div class="container">
+            <!-- Top Navigation -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+                <div class="container-fluid">
+                    <button class="btn btn-dark" id="navToggle" onclick="toggleNav()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <span id="username" class="navbar-text ms-3">Username: </span>
+                    <div class="ms-auto">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="darkModeSwitch" onclick="toggleDarkMode()">
+                            <label class="form-check-label" for="darkModeSwitch">Dark Mode</label>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <h1 id="subject-name">Subject name:</h1>
+                <h3 id="semester">Semester :</h3>
+            </div>
+
+            <!-- Modules Section -->
+            <div class="row">
+                <div class="col-md">
+                    <!-- Module buttons -->
+                    <div class="d-grid gap-3" id="modules-container">
+                        <!-- Buttons will be dynamically inserted here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        // Initialize Telegram WebApp
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        // Function to toggle dark mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // Function to toggle subtopics visibility
+        function toggleSubtopics(moduleId) {
+            const subtopics = document.getElementById(moduleId);
+            if (subtopics.style.display === "none" || subtopics.style.display === "") {
+                subtopics.style.display = "block";
+            } else {
+                subtopics.style.display = "none";
+            }
+        }
+
+        // Function to load questions from the backend
+        async function loadQuestions() {
+            try {
+                // Fetch questions from the backend
+                const response = await fetch('/api/questions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        initData: tg.initData
+                    })
+                });
+
+                const result = await response.json();
+                if (result.status === 'success') {
+                    displayModules(result.data);
+                    document.getElementById('subject-name').textContent = `Subject name: ${result.data.subject_name}`;
+                    document.getElementById('semester').textContent = `Semester: ${result.data.semester}`;
+                    document.getElementById('username').textContent = `Username: ${result.username}`;
+                } else {
+                    console.error('Error:', result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Function to display modules and questions
+        function displayModules(data) {
+            const container = document.getElementById('modules-container');
+            data.modules.forEach((module, index) => {
+                const moduleElement = createModuleElement(module, index + 1);
+                container.appendChild(moduleElement);
+            });
+        }
+
+        // Function to create a module element
+        function createModuleElement(module, moduleNumber) {
+            const moduleDiv = document.createElement('div');
+            moduleDiv.className = 'card mb-3';
+            
+            const header = document.createElement('div');
+            header.className = 'card-header';
+            header.innerHTML = `<h3>Module ${moduleNumber}: ${module.module_name}</h3>`;
+            
+            const body = document.createElement('div');
+            body.className = 'card-body';
+            
+            // Add question sections
+            const longQuestions = createQuestionSection('Long Answer Questions', module.long_answer_questions);
+            const shortQuestions = createQuestionSection('Short Answer Questions', module.short_answer_questions);
+            
+            body.appendChild(longQuestions);
+            body.appendChild(shortQuestions);
+            
+            moduleDiv.appendChild(header);
+            moduleDiv.appendChild(body);
+            
+            return moduleDiv;
+        }
+
+        // Function to create a question section
+        function createQuestionSection(title, questions) {
+            const section = document.createElement('div');
+            section.className = 'mb-3';
+            
+            section.innerHTML = `
+                <h4>${title}</h4>
+                <div class="btn-group">
+                    ${questions.map((q, i) => `
+                        <button class="btn btn-outline-primary" 
+                                onclick="showQuestion(${JSON.stringify(q)})">
+                            ${i + 1}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+            
+            return section;
+        }
+
+        // Function to show question details
+        function showQuestion(question) {
+            tg.sendData(JSON.stringify({
+                type: 'question_selected',
+                question: question.question,
+                course_name: document.getElementById('subject-name').textContent.split(': ')[1],
+                user_id: tg.initDataUnsafe.user.id,
+                specialization: question.specialization,
+                module: question.module
+            }));
+        }
+
+        // Load questions when the page loads
+        document.addEventListener('DOMContentLoaded', loadQuestions);
+
+        function toggleNav() {
+            const sidebar = document.getElementById("mySidebar");
+            const mainContent = document.getElementById("main-content");
+            const navToggle = document.getElementById("navToggle");
+
+            if (sidebar.style.width === "250px") {
+                sidebar.style.width = "0";
+                mainContent.style.marginLeft = "0";
+                navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                document.getElementById("sidebarLeaderboard").classList.remove("active");
+            } else {
+                sidebar.style.width = "250px";
+                mainContent.style.marginLeft = "250px";
+                navToggle.innerHTML = '<i class="fas fa-times"></i>';
+            }
+        }
+
+        function toggleSidebarLeaderboard() {
+            const leaderboard = document.getElementById("sidebarLeaderboard");
+            leaderboard.classList.toggle("active");
+        }
+    </script>
+</body>
+</html>
