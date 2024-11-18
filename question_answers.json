@@ -1,0 +1,268 @@
+{
+    "university": "KTU",
+    "spec_code": "ECE",
+    "semester": "S7",
+    "subject_name": "MICROWAVES AND ANTENNAS",
+    "modules": [
+      {
+        "module_name": "Module I",
+        "short_answer_questions": [
+          {
+            "question": "Define the term Beam Area of an antenna. Calculate the beam area of a field pattern given by E(θ)=cos²θ for 0°≤ θ ≤90°.",
+            "answer": "null",
+            "date": "December 2023"
+          },
+          {
+            "question": "Illustrate and describe the field zones of an antenna.",
+            "answer": "null",
+            "date": "December 2023"
+          },
+          {
+            "question": "Differentiate between Gain and Directivity of an antenna.",
+            "answer": "null",
+            "date": "December 2022, Model Question Paper"
+          },
+          {
+            "question": "Derive expression for effective aperture of an antenna.",
+            "answer": "null",
+            "date": "December 2022, Model Question Paper"
+          },
+          {
+            "question": "Derive an expression for aperture area of an antenna.",
+            "answer": "null",
+            "date": "Model Question Paper"
+          }
+        ],
+        "long_answer_questions": [
+          {
+            "question": "a) State and prove Reciprocity theorem (5) b) Derive the expressions for Radiation resistance and directivity of short dipole (9)",
+            "answer": "null",
+            "date": "December 2023"
+          },
+          {
+            "question": "a) Define the term Effective aperture. Derive the expression for the Effective aperture of antenna. Calculate the effective aperture of an antenna which is operating at a frequency of 2GHz. (9) b) Differentiate between Antenna efficiency and Beam efficiency. (5)",
+            "answer": "null",
+            "date": "December 2023"
+          },
+          {
+            "question": "a) Define the terms (i) Retarded potential (ii) Antenna field zones (4) Derive expressions for the Far Field components and Radiation Resistance and Directivity of a short dipole antenna. (10)",
+            "answer": "null",
+            "date": "Model Question Paper"
+          },
+          {
+            "question": "a) State and prove Helmholtz theorem (7) b) (i) Compute the radiation resistance, power radiated and efficiency of an antenna having a total resistance of 50Ω and effective height of 69.96m and a current of 50A (rms) at 0.480MHz. (7) (ii) Calculate the effective aperture of a short dipole antenna operating at 100 MHz. (7)",
+            "answer": "null",
+            "date": "Model Question Paper"
+          }
+        ]
+      },
+      {
+        "module_name": "Module II",
+        "short_answer_questions": [
+          {
+            "question": "Outline the principles of a mobile phone antenna with a neat diagram.",
+            "answer": "null",
+            "date": "December 2023"
+          },
+          {
+            "question": "With suitable figures, explain any two feeding methods of Microstrip patch antenna.",
+            "answer": "null",
+            "date": "December 2023"
+          },
+          {
+            "question": "Explain the principle of operation of a Horn Antenna.",
+            "answer": "null",
+            "date": "December 2022"
+          },
+          {
+            "question": "Explain the working of an Inverted - F antenna.",
+            "answer": "null",
+            "date": "December 2022"
+          },
+          {
+            "question": "Why is a Log Periodic antenna called a Frequency Independent antenna? Explain.",
+            "answer": "null",
+            "date": "Model Question Paper"
+          },
+          {
+            "question": "Briefly explain about the Inverted F antenna.",
+            "answer": "null",
+            "date": "Model Question Paper"
+          }
+        ],
+        "long_answer_questions": [
+          {
+            "question": "a) With a neat figure explain the working of a Log Periodic dipole array. Write all the design equations. (7) b) Differentiate between the Normal mode and Axial mode of a Helical antenna. Write the expressions for HPBW, BWFN and Directivity in axial mode. (7)",
+            "answer": "null",
+            "date": "December 2023"
+          },
+          {
+            "question": "a) Design a rectangular microstrip patch antenna using a substrate with a dielectric constant of 2.2, h =0.1588 cm so as to resonate at 10GHz. (10) b) Explain the principle of a Cassegrain antenna with a neat figure. (4)",
+            "answer": "null",
+            "date": "December 2023"
+          },
+          {
+            "question": "a) Explain the working of a parabolic dish antenna. Write down the expression for gain, HPBW and BWFN. (6) b) Design a rectangular microstrip antenna using a dielectric substrate with a dielectric constant of 2.2, h = 0.1588 cm so as to resonate at 10 GHz. (8)",
+            "answer": "null",
+            "date": "Model Question Paper"
+          },
+          {
+            "question": "a) Explain the working of a Log periodic dipole array and explain its design steps. (7) b) Explain the axial mode helical antenna. Write down the expression for gain, HPBW,BWFN and radiation resistance of the axial mode helical antenna. (7)",
+            "answer": "null",
+            "date": "Model Question Paper"
+          }
+        ]
+      },
+      {
+        "module_name": "Module III",
+        "short_answer_questions": [
+          {
+            "question": "Derive the Array factor of a two-element array formed by two infinitesimal dipoles.",
+            "answer": "null",
+            "date": "December 2023"
+          },
+          {
+            "question": "What are grating lobes? How can they be minimized?",
+            "answer": "null",
+            "date": "December 2023"
+          },
+          {
+            "question": "Explain the principle of Pattern Multiplication.",
+            "answer": "null",
+            "date": "December 2022"
+          },
+          {
+            "question": "Explain the concept of phased arrays.",
+            "answer": "null",
+            "date": "December 2022"
+          },
+          {
+            "question": "Explain (i) Pattern Multiplication (ii) Grating lobes",
+            "answer": "null",
+            "date": "Model Question Paper"
+          },
+          {
+            "question": "Demonstrate the working principle of Phase Arrays.",
+            "answer": "null",
+            "date": "Model Question Paper"
+          }
+        ],
+        "long_answer_questions": [
+          {
+            "question": "Derive an expression for the array factor of N isotropic sources for an end-fire array and also the expression for the major lobe, minor lobes and Nulls of the array. (14)",
+            "answer": "null",
+            "date": "Model Question Paper"
+          },
+          {
+            "question": "a) Explain Chebyshev array and write down the expression for the array factor. (7) b) Design a Broadside Array and plot its radiation pattern. (7)",
+            "answer": "null",
+            "date": "Model Question Paper"
+          }
+        ]
+      },
+      {
+        "module_name": "Module IV",
+        "short_answer_questions": [
+          {
+            "question": "Derive the equation for Cyclotron angular frequency of a cylindrical magnetron.",
+            "answer": "null",
+            "date": "December 2023"
+          },
+          {
+            "question": "Derive the equation for resonant frequency of Rectangular cavity resonator.",
+            "answer": "null",
+            "date": "December 2023"
+          },
+          {
+            "question": "Derive expressions for the resonant frequency of a rectangular cavity resonator.",
+            "answer": "null",
+            "date": "December 2022"
+          },
+          {
+            "question": "Derive expressions for the efficiency of a Reflex Klystron",
+            "answer": "null",
+            "date": "December 2022"
+          },
+          {
+            "question": "Derive the resonant frequency of a rectangular cavity resonator.",
+            "answer": "null",
+            "date": "Model Question Paper"
+          },
+          {
+            "question": "What are re-entrant cavities? Show that they support an infinite number of resonant frequencies.",
+            "answer": "null",
+            "date": "Model Question Paper"
+          }
+        ],
+        "long_answer_questions": [
+          {
+            "question": "a) With the help of a neat diagram explain the working of a Reflex Klystron. (7) b) A cylindrical magnetron has the following operating parameters : V₀ = 25KV, I₀= 28A, B = 0.332 Wb/m², a = 5 cm, b = 10 cm. Find a) Cutoff voltage for a fixed B₀, b) Cutoff magnetic Flux Density for a fixed V₀ (7)",
+            "answer": "null",
+            "date": "December 2022"
+          },
+          {
+            "question": "a) Derive expressions for the Hull cutoff Magnetic Field and Voltage of a magnetron. (7) b) With a diagram, explain the amplification process in a travelling wave tube (7)",
+            "answer": "null",
+            "date": "December 2022"
+          },
+          {
+            "question": "a) A reflex klystron operates under the following conditions: V₀=500V, Rsh =10ΚΩ, fr= 8 GHz, L=1 mm, e/m = 1.759 x 10¹¹ (MKS system) The tube is oscillating at fr at the peak of the n = 2 mode. Assume that the transit time through the gap and beam loading are neglected. Determine: (a) The value of the repeller voltage Vr. (b) The direct current necessary to give a microwave gap voltage of 200V. (c) The electronic efficiency under this condition. (7) b) Assuming pi mode of oscillations explain how a magnetron can sustain its oscillations using the cross field. (7)",
+            "answer": "null",
+            "date": "Model Question Paper"
+          },
+          {
+            "question": "a) Show that the axial electric field of TWT varies with convection current. (7) b) Explain the electronic admittance of the gap in the case of a reflex klystron. With an admittance diagram explain the condition required for oscillation in a reflex Klystron. (7)",
+            "answer": "null",
+            "date": "Model Question Paper"
+          }
+        ]
+      },
+      {
+        "module_name": "Module V",
+        "short_answer_questions": [
+          {
+            "question": "What do you mean by Gunn Effect?",
+            "answer": "null",
+            "date": "December 2022"
+          },
+          {
+            "question": "List the important properties of Scattering parameters.",
+            "answer": "null",
+            "date": "December 2022"
+          },
+          {
+            "question": "Explain with a figure how a ferrite isolator can support only forward direction waves.",
+            "answer": "null",
+            "date": "Model Question Paper"
+          },
+          {
+            "question": "Write a short note on Phase shifter.",
+            "answer": "null",
+            "date": "Model Question Paper"
+          }
+        ],
+        "long_answer_questions": [
+          {
+            "question": "a) Explain the important properties of Magic Tee. Derive its Scattering parameters (7) b) Explain the different modes of operation of Gunn Diode. (7)",
+            "answer": "null",
+            "date": "December 2022"
+          },
+          {
+            "question": "a) Explain the working of a two-hole directional coupler. Derive its Scattering parameters. (7) b) With the help of neat sketches explain the working of a circulator. (7)",
+            "answer": "null",
+            "date": "December 2022"
+          },
+          {
+            "question": "a) Explain the working of microwave amplifiers using MESFET (8) b) Explain the constructional features of a two-hole directional coupler and derive the S Matrix. (6)",
+            "answer": "null",
+            "date": "Model Question Paper"
+          },
+          {
+            "question": "a) Draw the J-E characteristics of a Gunn diode and explain its operation. (10) b) Discuss the constructional features of magic tees and derive its S Matrix. Why are they called so? (4)",
+            "answer": "null",
+            "date": "Model Question Paper"
+          }
+        ]
+      }
+    ]
+  }
