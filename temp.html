@@ -204,65 +204,51 @@
                 subtopics.style.display = "none";
             }
         }
-        function getUrlParams() {
-            const params = new URLSearchParams(window.location.search);
-            return {
-                spec_code: params.get('spec_code'),
-                semester: params.get('semester'),
-                subject_name: params.get('subject')
-            };
-        }
 
         // Function to load questions from the backend
         async function loadQuestions() {
-            const { spec_code, semester, subject_name } = getUrlParams();
-
-            if (!spec_code || !semester || !subject_name) {
-                displayDefaultMessage();
-                return;
-            }
-
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
             try {
-                const response = await fetch('question_answers.json', {
-                    signal: controller.signal
+                const queryParams = new URLSearchParams(window.location.search);
+                const spec_code = queryParams.get('spec_code');
+                const semester = queryParams.get('semester');
+                const subject = queryParams.get('subject');
+
+                const BACKEND_URL = 'https://e911-2405-201-f012-9828-20cc-f2a8-115-235c.ngrok-free.app';
+                const response = await fetch(`${BACKEND_URL}/api/questions?` + queryParams.toString(), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        initData: tg.initData,
+                        spec_code: spec_code,
+                        semester: semester,
+                        subject: subject
+                    })
                 });
-                clearTimeout(timeoutId);
-
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                const data = await response.json();
-                const filteredData = filterData(data, spec_code, semester, subject_name);
-                displayModules(filteredData);
-            } catch (error) {
-                if (error.name === 'AbortError') {
-                    console.error('Fetch aborted');
+                const result = await response.json();
+                console.log('API Response:', result); // Debug logging
+                
+                if (result.status === 'success') {
+                    displayModules(result.data);
+                    document.getElementById('subject-name').textContent = `Subject name: ${result.data.subject_name}`;
+                    document.getElementById('semester').textContent = `Semester: ${result.data.semester}`;
+                    document.getElementById('username').textContent = `Username: ${result.username}`;
                 } else {
-                    console.error('Fetch error:', error);
+                    console.error('Error:', result.message);
                 }
+            } catch (error) {
+                console.error('Error:', error);
             }
-        }
-        // Function to filter data based on URL parameters
-        function filterData(data, spec_code, semester, subject_name) {
-            if (data.spec_code === spec_code && data.semester === semester && data.subject_name === subject_name) {
-                return data;
-            }
-            return null;
         }
 
         // Function to display modules and questions
         function displayModules(data) {
             const container = document.getElementById('modules-container');
-            container.innerHTML = ''; // Clear previous content
-
-            if (!data) {
-                container.innerHTML = '<p>No data found for the specified parameters.</p>';
-                return;
-            }
-
             data.modules.forEach((module, index) => {
                 const moduleElement = createModuleElement(module, index + 1);
                 container.appendChild(moduleElement);
@@ -316,7 +302,6 @@
 
         // Function to show question details
         function showQuestion(question) {
-            const tg = window.Telegram.WebApp;
             tg.sendData(JSON.stringify({
                 type: 'question_selected',
                 question: question.question,
@@ -326,16 +311,6 @@
                 module: question.module
             }));
         }
-        // Function to display default message
-        function displayDefaultMessage() {
-            const container = document.getElementById('modules-container');
-            container.innerHTML = `
-                <h2>Welcome to the Bot</h2>
-                <p>Please select a subject to view the questions.</p>
-                <a href="https://testsite-psi-one.vercel.app/subject-info">Go to Subject Info</a>
-            `;
-        }
-
 
         // Load questions when the page loads
         document.addEventListener('DOMContentLoaded', loadQuestions);
