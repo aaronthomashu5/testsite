@@ -207,6 +207,9 @@
 
         // Function to load questions from the backend
         async function loadQuestions() {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
+
             try {
                 const queryParams = new URLSearchParams(window.location.search);
                 const spec_code = queryParams.get('spec_code');
@@ -214,6 +217,9 @@
                 const subject = queryParams.get('subject');
 
                 const BACKEND_URL = 'https://e911-2405-201-f012-9828-20cc-f2a8-115-235c.ngrok-free.app';
+
+                console.log('Sending initData to backend:', tg.initData);
+                // Fetch questions from the backend
                 const response = await fetch(`${BACKEND_URL}/api/questions?` + queryParams.toString(), {
                     method: 'POST',
                     headers: {
@@ -224,15 +230,25 @@
                         spec_code: spec_code,
                         semester: semester,
                         subject: subject
-                    })
+                    }),
+                    signal: controller.signal
                 });
+
+                clearTimeout(timeoutId);
+                console.log('Received response status:', response.status);
+                
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    const errorData = await response.json();
+                    console.error('Backend error:', errorData.message);
+                    alert(`Error: ${errorData.message}`);
+                    return;
                 }
 
                 const result = await response.json();
-                console.log('API Response:', result); // Debug logging
-                
+
+                console.log('Backend response:', result);
+
+
                 if (result.status === 'success') {
                     displayModules(result.data);
                     document.getElementById('subject-name').textContent = `Subject name: ${result.data.subject_name}`;
@@ -240,9 +256,16 @@
                     document.getElementById('username').textContent = `Username: ${result.username}`;
                 } else {
                     console.error('Error:', result.message);
+                    alert(`Error: ${result.message}`);
                 }
             } catch (error) {
-                console.error('Error:', error);
+                if (error.name === 'AbortError') {
+                    console.error('Request timed out');
+                    alert('Request timed out. Please try again later.');
+                } else {
+                    console.error('Fetch error:', error);
+                    alert('An unexpected error occurred while loading questions.');
+                }
             }
         }
 
