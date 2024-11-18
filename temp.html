@@ -240,7 +240,7 @@
                 if (!response.ok) {
                     const errorData = await response.json();
                     console.error('Backend error:', errorData.message);
-                    alert(`Error: ${errorData.message}`);
+                    // alert(`Error: ${errorData.message}`);
                     return;
                 }
 
