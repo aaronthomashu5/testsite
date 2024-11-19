@@ -7,6 +7,32 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --tg-theme-bg-color: #ffffff;
+            --tg-theme-text-color: #000000;
+            --tg-theme-button-color: #3390ec;
+            --tg-theme-button-text-color: #ffffff;
+        }
+
+        body {
+            background-color: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+        }
+
+        .card {
+            border: 1px solid var(--tg-theme-button-color);
+            margin-bottom: 1rem;
+        }
+
+        .btn-outline-primary {
+            color: var(--tg-theme-button-color);
+            border-color: var(--tg-theme-button-color);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+        }
         .sidebar {
             height: 100%;
             width: 0;
@@ -155,8 +181,14 @@
                     <button class="btn btn-dark" id="navToggle" onclick="toggleNav()">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <span id="username" class="navbar-text ms-3">Username: </span>
-                    <div class="ms-auto">
+                    <span id="username" class="navbar-text ms-3">
+                        <i class="fas fa-user"></i> Loading...
+                    </span>
+                    <div class="ms-auto d-flex align-items-center">
+                        <div class="me-3" id="premium-status">
+                            <i class="fas fa-crown text-warning"></i>
+                            <span>Premium</span>
+                        </div>
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="darkModeSwitch" onclick="toggleDarkMode()">
                             <label class="form-check-label" for="darkModeSwitch">Dark Mode</label>
@@ -187,9 +219,78 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         // Initialize Telegram WebApp
-        const tg = window.Telegram.WebApp;
-        tg.expand();
+        document.addEventListener('DOMContentLoaded', function() {
+            const tg = window.Telegram.WebApp;
+            tg.expand();
 
+            // Parse URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const params = {
+                spec_code: urlParams.get('spec_code'),
+                semester: urlParams.get('semester'),
+                subject: urlParams.get('subject')
+            };
+
+            // Update page content with URL parameters
+            document.getElementById('subject-name').textContent = `Subject: ${decodeURIComponent(params.subject || '')}`;
+            document.getElementById('semester').textContent = `Semester: ${params.semester || ''}`;
+
+            // Set user information
+            if (tg.initDataUnsafe.user) {
+                const user = tg.initDataUnsafe.user;
+                document.getElementById('username').innerHTML = `
+                    <i class="fas fa-user"></i> ${user.username || user.first_name}
+                `;
+            }
+            const sampleData = {
+                university: "KTU",
+                spec_code: params.spec_code,
+                semester: params.semester,
+                subject_name: params.subject,
+                modules: [
+                    {
+                        module_name: "Module 1",
+                        short_answer_questions: [
+                            {
+                                question: "Sample short question 1?",
+                                answer: null,
+                                date: "2024-03-20"
+                            }
+                        ],
+                        long_answer_questions: [
+                            {
+                                question: "Sample long question 1?",
+                                answer: null,
+                                date: "2024-03-20"
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            displayModules(sampleData);
+
+            // Apply Telegram theme
+            const theme = tg.themeParams;
+            if (theme) {
+                document.documentElement.style.setProperty('--tg-theme-bg-color', theme.bg_color);
+                document.documentElement.style.setProperty('--tg-theme-text-color', theme.text_color);
+                document.documentElement.style.setProperty('--tg-theme-button-color', theme.button_color);
+                document.documentElement.style.setProperty('--tg-theme-button-text-color', theme.button_text_color);
+                
+                // Auto-enable dark mode if Telegram theme is dark
+                if (theme.bg_color.match(/^#[0-9a-f]{6}$/i)) {
+                    const rgb = parseInt(theme.bg_color.slice(1), 16);
+                    const brightness = ((rgb >> 16) & 255) * 0.299 + 
+                                    ((rgb >> 8) & 255) * 0.587 + 
+                                    (rgb & 255) * 0.114;
+                    if (brightness < 128) {
+                        document.getElementById('darkModeSwitch').checked = true;
+                        toggleDarkMode();
+                    }
+                }
+            }
+        });
         // Function to toggle dark mode
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
@@ -204,54 +305,94 @@
                 subtopics.style.display = "none";
             }
         }
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                spec_code: params.get('spec_code'),
+                semester: params.get('semester'),
+                subject_name: params.get('subject')
+            };
+        }
 
         // Function to load questions from the backend
         async function loadQuestions() {
-            try {
-                const queryParams = new URLSearchParams(window.location.search);
-                const spec_code = queryParams.get('spec_code');
-                const semester = queryParams.get('semester');
-                const subject = queryParams.get('subject');
+            const { spec_code, semester, subject_name } = getUrlParams();
 
-                const BACKEND_URL = 'https://fc66-2405-201-f012-9828-24a9-b68d-1b9b-db53.ngrok-free.app';
-                const response = await fetch(`${BACKEND_URL}/api/questions?` + queryParams.toString(), {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        initData: tg.initData,
-                        spec_code: spec_code,
-                        semester: semester,
-                        subject: subject
-                    })
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                console.log('API Response:', result); // Debug logging
-                
-                if (result.status === 'success') {
-                    displayModules(result.data);
-                    document.getElementById('subject-name').textContent = `Subject name: ${result.data.subject_name}`;
-                    document.getElementById('semester').textContent = `Semester: ${result.data.semester}`;
-                    document.getElementById('username').textContent = `Username: ${result.username}`;
-                } else {
-                    console.error('Error:', result.message);
-                }
-            } catch (error) {
-                console.error('Error:', error);
+            if (!spec_code || !semester || !subject_name) {
+                displayDefaultMessage();
+                return;
             }
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
+            try {
+                const response = await fetch('json files/question_answers.json', {
+                    signal: controller.signal                });
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                const filteredData = filterData(data, spec_code, semester, subject_name);
+                displayModules(filteredData);
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    console.error('Fetch aborted');
+                } else {
+                    console.error('Fetch error:', error);
+                }
+            }
+        }
+        // Function to filter data based on URL parameters
+        function filterData(data, spec_code, semester, subject_name) {
+            if (data.spec_code === spec_code && data.semester === semester && data.subject_name === subject_name) {
+                return data;
+            }
+            return null;
         }
 
         // Function to display modules and questions
         function displayModules(data) {
             const container = document.getElementById('modules-container');
+            container.innerHTML = '';
+
             data.modules.forEach((module, index) => {
-                const moduleElement = createModuleElement(module, index + 1);
-                container.appendChild(moduleElement);
+                const moduleDiv = document.createElement('div');
+                moduleDiv.className = 'card mb-3';
+                
+                moduleDiv.innerHTML = `
+                    <div class="card-header">
+                        <h3>Module ${index + 1}: ${module.module_name}</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h4>Long Answer Questions</h4>
+                            <div class="btn-group">
+                                ${module.long_answer_questions.map((q, i) => `
+                                    <button class="btn btn-outline-primary" 
+                                            onclick='showQuestion(${JSON.stringify(q)})'>
+                                        Question ${i + 1}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div>
+                            <h4>Short Answer Questions</h4>
+                            <div class="btn-group">
+                                ${module.short_answer_questions.map((q, i) => `
+                                    <button class="btn btn-outline-primary" 
+                                            onclick='showQuestion(${JSON.stringify(q)})'>
+                                        Question ${i + 1}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(moduleDiv);
             });
         }
 
@@ -302,15 +443,26 @@
 
         // Function to show question details
         function showQuestion(question) {
-            tg.sendData(JSON.stringify({
+            const tg = window.Telegram.WebApp;
+            const data = {
                 type: 'question_selected',
                 question: question.question,
-                course_name: document.getElementById('subject-name').textContent.split(': ')[1],
-                user_id: tg.initDataUnsafe.user.id,
-                specialization: question.specialization,
-                module: question.module
-            }));
+                date: question.date,
+                user_id: tg.initDataUnsafe?.user?.id,
+                username: tg.initDataUnsafe?.user?.username
+            };
+            tg.sendData(JSON.stringify(data));
         }
+        // Function to display default message
+        function displayDefaultMessage() {
+            const container = document.getElementById('modules-container');
+            container.innerHTML = `
+                <h2>Welcome to the Bot</h2>
+                <p>Please select a subject to view the questions.</p>
+                <a href="https://testsite-psi-one.vercel.app/subject-info">Go to Subject Info</a>
+            `;
+        }
+
 
         // Load questions when the page loads
         document.addEventListener('DOMContentLoaded', loadQuestions);
@@ -337,5 +489,6 @@
             leaderboard.classList.toggle("active");
         }
     </script>
+    
 </body>
 </html>
